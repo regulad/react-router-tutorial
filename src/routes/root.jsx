@@ -24,10 +24,14 @@ export async function loader({ request }) {
 }
 
 export default function Root() {
-    const { contacts, q } = useLoaderData();
     // We must use this hook to access the data returned by the loader.
+    const { contacts, q } = useLoaderData();
+    // we use this instead of navigator since it is rendered client side
     const navigation = useNavigation();
     const submit = useSubmit();
+
+    // cannot break down following statement because of short circuit
+    const isSearching = navigation.location && new URLSearchParams(navigation.location.search).has("q");
 
     useEffect(() => {
         document.getElementById("q").value = q;
@@ -41,6 +45,7 @@ export default function Root() {
                     <Form id={"search-form"} role={"search"}>
                         <input
                             id={"q"} // query?
+                            className={isSearching ? "loading" : ""}
                             aria-label={"Search contacts"}
                             placeholder={"Search for..."}
                             type={"search"}
@@ -55,7 +60,7 @@ export default function Root() {
                             id={"search-spinner"}
                             // when visible, this spins to represent a page loading
                             aria-hidden
-                            hidden={true}
+                            hidden={!isSearching}
                         />
                         <div
                             className={"sr-only"}
