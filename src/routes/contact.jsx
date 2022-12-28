@@ -9,11 +9,18 @@ export async function action({ request, params }) {
     });
 }
 
+/**
+ * This method must be exported and named "loader" for use with the router.
+ */
 export async function loader({ params }) {
-    /**
-     * This method must be exported and named "loader" for use with the router.
-     */
-    return await getContact(params.contactId);
+    const contact = await getContact(params.contactId)
+    if (!contact) {
+        throw new Response("", {
+            status: 404,
+            statusText: "Contact not found",
+        });
+    }
+    return contact;
     // If we used brackets here, it would make an object that had {contact: Object (contact)}
     // I assume that I autocompleted it from Copilot and that Copilot got it from an action
 }
