@@ -1,5 +1,6 @@
 import {Form, NavLink, Outlet, redirect, useLoaderData, useNavigation} from "react-router-dom";
 import {createContact, getContacts} from "../contacts.js";
+import {useEffect} from "react";
 
 export async function action() {
     /**
@@ -19,13 +20,17 @@ export async function loader({ request }) {
     const url = new URL(request.url);
     const query = url.searchParams.get("q");
     const contacts = await getContacts(query);
-    return { contacts };
+    return { contacts, query };
 }
 
 export default function Root() {
-    const { contacts } = useLoaderData();
+    const { contacts, query } = useLoaderData();
     // We must use this hook to access the data returned by the loader.
     const navigation = useNavigation();
+
+    useEffect(() => {
+        document.getElementById("q").value = q;
+    }); // magic!
 
     return (
         <>
@@ -39,6 +44,7 @@ export default function Root() {
                             placeholder={"Search for..."}
                             type={"search"}
                             name={"q"} // also query
+                            defaultValue={query}
                         />
                         <div
                             id={"search-spinner"}
