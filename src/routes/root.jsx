@@ -1,4 +1,4 @@
-import {Form, NavLink, Outlet, redirect, useLoaderData, useNavigation} from "react-router-dom";
+import {Form, NavLink, Outlet, redirect, useLoaderData, useNavigation, useSubmit} from "react-router-dom";
 import {createContact, getContacts} from "../contacts.js";
 import {useEffect} from "react";
 
@@ -18,19 +18,20 @@ export async function loader({ request }) {
      * This method must be exported and named "loader" for use with the router.
      */
     const url = new URL(request.url);
-    const query = url.searchParams.get("q");
+    const query = url.searchParams.get("q") || null;
     const contacts = await getContacts(query);
     return { contacts, query };
 }
 
 export default function Root() {
-    const { contacts, query } = useLoaderData();
+    const { contacts, q } = useLoaderData();
     // We must use this hook to access the data returned by the loader.
     const navigation = useNavigation();
+    const submit = useSubmit();
 
     useEffect(() => {
         document.getElementById("q").value = q;
-    }); // magic!
+    }, [q]); // magic! don't forget the deps
 
     return (
         <>
@@ -44,7 +45,11 @@ export default function Root() {
                             placeholder={"Search for..."}
                             type={"search"}
                             name={"q"} // also query
-                            defaultValue={query}
+                            defaultValue={q}
+                            onChange={(event) => {
+                                submit(event.currentTarget.form);
+                                // this submits the code
+                            }}
                         />
                         <div
                             id={"search-spinner"}
