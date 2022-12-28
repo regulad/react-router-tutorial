@@ -1,4 +1,4 @@
-import {Form, Link, NavLink, Outlet, redirect, useLoaderData, useNavigation} from "react-router-dom";
+import {Form, NavLink, Outlet, redirect, useLoaderData, useNavigation} from "react-router-dom";
 import {createContact, getContacts} from "../contacts.js";
 
 export async function action() {
@@ -12,11 +12,13 @@ export async function action() {
     // asks user to edit & populate contact after creation
 }
 
-export async function loader() {
+export async function loader({ request }) {
     /**
      * This method must be exported and named "loader" for use with the router.
      */
-    const contacts = await getContacts();
+    const url = new URL(request.url);
+    const query = url.searchParams.get("q");
+    const contacts = await getContacts(query);
     return { contacts };
 }
 
@@ -30,7 +32,7 @@ export default function Root() {
             <div id={"sidebar"}>
                 <h1>Regulad's React Router Contacts</h1>
                 <div>
-                    <form id={"search-form"} role={"search"}>
+                    <Form id={"search-form"} role={"search"}>
                         <input
                             id={"q"} // query?
                             aria-label={"Search contacts"}
@@ -48,7 +50,7 @@ export default function Root() {
                             className={"sr-only"}
                             aria-live={"polite"}
                         />
-                    </form>
+                    </Form>
                     <Form method={"post"}>
                         {/*
                             This form is used to create a new contact.
