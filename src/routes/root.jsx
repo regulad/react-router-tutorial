@@ -1,4 +1,4 @@
-import {Form, Link, NavLink, Outlet, redirect, useLoaderData} from "react-router-dom";
+import {Form, Link, NavLink, Outlet, redirect, useLoaderData, useNavigation} from "react-router-dom";
 import {createContact, getContacts} from "../contacts.js";
 
 export async function action() {
@@ -23,6 +23,7 @@ export async function loader() {
 export default function Root() {
     const { contacts } = useLoaderData();
     // We must use this hook to access the data returned by the loader.
+    const navigation = useNavigation();
 
     return (
         <>
@@ -107,9 +108,15 @@ export default function Root() {
                 </nav>
             </div>
 
-            <div id={"detail"}>
+            <div
+                id={"detail"}
+                className={
+                    navigation.state === "loading" ? "loading" : ""
+                }
+                // navigation.state could be used for a loading bar or any other animation
+            >
                 <Outlet />
-                {/* The child componenet will be rendered here. */}
+                {/* The child component will be rendered here. */}
                 {/* If there is no child component, nothing will be rendered here. */}
             </div>
         </>
