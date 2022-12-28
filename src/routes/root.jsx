@@ -1,4 +1,18 @@
+import {Link, Outlet, useLoaderData} from "react-router-dom";
+import {getContacts} from "../contacts.js";
+
+export async function loader() {
+    /**
+     * This method must be exported and named "loader" for use with the router.
+     */
+    const contacts = await getContacts();
+    return { contacts };
+}
+
 export default function Root() {
+    const { contacts } = useLoaderData();
+    // We must use this hook to access the data returned by the loader.
+
     return (
         <>
             <div id={"sidebar"}>
@@ -30,17 +44,49 @@ export default function Root() {
                     </form>
                 </div>
                 <nav>
-                    <ul>
-                        <li>
-                            <a href={"contacts/1"}>Your Card</a>
-                        </li>
-                        <li>
-                            <a href={"contacts/2"}>Your Friend's Card</a>
-                        </li>
-                    </ul>
+                    {
+                        contacts.length
+                            ? (
+                                // In a real program, I would use more componenets and abstract on a higher level.
+                                // This is messy.
+                                <ul>
+                                    {/* We use links here to avoid reloading the page */}
+                                    {/* Additionally, a 404 will instead just not do anything */}
+                                    {
+                                    contacts.map(
+                                        (contact) => (
+                                            /* the contact is the same type as before */
+                                            <li key={contact.id}>
+                                                <Link to={`contacts/${contact.id}`}>
+                                                    {/* Links are like any other element, so we can use them like this with children */}
+                                                    {
+                                                        contact.first || contact.last
+                                                            ? <>{contact.first} {contact.last}</>
+                                                            : <i>Unknown or No name</i>
+                                                    }
+                                                          {" " /* This space is a gap between title and the favorite star (not a button) */}
+                                                          {contact.favorite && <span>★</span>}
+                                                      </Link>
+                                                  </li>
+                                              )
+                                          )
+                                      }
+                                  </ul>
+                            )
+                            : (
+                                <p>
+                                    <i>No contacts found.</i>
+                                </p>
+                            )
+                    }
                 </nav>
             </div>
-            <div id={"detail"} />
+
+            <div id={"detail"}>
+                <Outlet />
+                {/* The child componenet will be rendered here. */}
+                {/* If there is no child component, nothing will be rendered here. */}
+            </div>
         </>
     )
 }
