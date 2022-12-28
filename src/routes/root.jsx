@@ -1,5 +1,15 @@
-import {Link, Outlet, useLoaderData} from "react-router-dom";
-import {getContacts} from "../contacts.js";
+import {Form, Link, Outlet, useLoaderData} from "react-router-dom";
+import {createContact, getContacts} from "../contacts.js";
+
+export async function action() {
+    /**
+     * This method must be called action, as it is the action that occurs when
+     * a POST request is made to the root page.
+     * I would assume that hooks work here?
+     */
+    const contact = await createContact();
+    return { contact }
+}
 
 export async function loader() {
     /**
@@ -37,11 +47,16 @@ export default function Root() {
                             aria-live={"polite"}
                         />
                     </form>
-                    <form method={"post"}>
+                    <Form method={"post"}>
+                        {/*
+                            This form is used to create a new contact.
+                            It will send a "client-side POST request" to the root page.
+                            Since this method uses the useLoaderData hook, it will rerender.
+                        */}
                         <button type={"submit"}>
-                            Add new contact...
+                            New...
                         </button>
-                    </form>
+                    </Form>
                 </div>
                 <nav>
                     {

@@ -5,7 +5,7 @@ import {
     RouterProvider
 } from "react-router-dom";
 import './index.css'
-import Root, { loader as rootLoader } from "./routes/root.jsx";
+import Root, { loader as rootLoader, action as rootAction } from "./routes/root.jsx";
 import ErrorPage from "./routes/error-page.jsx";
 import Contact from "./routes/contact.jsx";
 
@@ -19,6 +19,8 @@ const router = createBrowserRouter([
         // if an error is on otherpage/whatever, it will be handled instead by that error handler
         loader: rootLoader,
         // this is the loader for the root page, it will be run when navigated to
+        action: rootAction,
+        // this action will get caused when a POST request is made to the root page
         children: [
             {
                 // since this is a child of /, it inherits the error handler
