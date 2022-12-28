@@ -1,4 +1,4 @@
-import {Form, Link, Outlet, useLoaderData} from "react-router-dom";
+import {Form, Link, Outlet, redirect, useLoaderData} from "react-router-dom";
 import {createContact, getContacts} from "../contacts.js";
 
 export async function action() {
@@ -8,7 +8,8 @@ export async function action() {
      * I would assume that hooks work here?
      */
     const contact = await createContact();
-    return { contact };
+    return redirect(`/contacts/${contact.id}/edit`);
+    // asks user to edit & populate contact after creation
 }
 
 export async function loader() {
