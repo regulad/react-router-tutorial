@@ -10,6 +10,7 @@ import ErrorPage from "./routes/error-page.jsx";
 import Contact, { loader as contactLoader } from "./routes/contact.jsx";
 import EditContact, { action as editAction } from "./routes/edit.jsx";
 import { action as destroyAction } from "./routes/destroy.jsx";
+import Index from "./routes/index.jsx";
 
 const router = createBrowserRouter([
     {
@@ -24,6 +25,12 @@ const router = createBrowserRouter([
         action: rootAction,
         // this action will get caused when a POST request is made to the root page
         children: [
+            {
+                // we use index and not {path: ""}
+                // for an **exact** match case since the parent is a root
+                index: true,
+                element: <Index />
+            },
             {
                 // since this is a child of /, it inherits the error handler
                 path: 'contacts/:contactId',
