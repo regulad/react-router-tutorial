@@ -52,7 +52,10 @@ export default function Root() {
                             name={"q"} // also query
                             defaultValue={q}
                             onChange={(event) => {
-                                submit(event.currentTarget.form);
+                                const isFirstSearch = q == null;
+                                submit(event.currentTarget.form, {
+                                    replace: isFirstSearch, // replaces history line
+                                });
                                 // this submits the code
                             }}
                         />
