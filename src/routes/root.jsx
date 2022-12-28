@@ -8,7 +8,7 @@ export async function action() {
      * I would assume that hooks work here?
      */
     const contact = await createContact();
-    return { contact }
+    return { contact };
 }
 
 export async function loader() {

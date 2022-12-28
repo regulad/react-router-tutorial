@@ -6,8 +6,9 @@ export async function loader({ params }) {
     /**
      * This method must be exported and named "loader" for use with the router.
      */
-    const contact = await getContact(params.contactId);
-    return { contact };
+    return await getContact(params.contactId);
+    // If we used brackets here, it would make an object that had {contact: Object (contact)}
+    // I assume that I autocompleted it from Copilot and that Copilot got it from an action
 }
 
 

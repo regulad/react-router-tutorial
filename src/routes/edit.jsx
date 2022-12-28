@@ -1,4 +1,18 @@
-import {Form, useLoaderData} from "react-router-dom";
+import {Form, redirect, useLoaderData} from "react-router-dom";
+import {updateContact} from "../contacts.js";
+
+export async function action({ request, params }) {
+    /**
+     * we can use request and params here to receive the
+     * two respective pieces of data
+     */
+    const formData = await request.formData();
+    const updates = Object.fromEntries(formData); // not familiar with this
+    await updateContact(params.contactId, updates);
+    return redirect(`/contacts/${params.contactId}`);
+    // Redirect is a Response object that we are returning.
+    // The browser uses the Response object to figure out how to respond to the request.
+}
 
 export default function EditContact() {
     const contact = useLoaderData();

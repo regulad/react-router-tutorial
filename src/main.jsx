@@ -8,7 +8,7 @@ import './index.css'
 import Root, { loader as rootLoader, action as rootAction } from "./routes/root.jsx";
 import ErrorPage from "./routes/error-page.jsx";
 import Contact, { loader as contactLoader } from "./routes/contact.jsx";
-import EditContact from "./routes/edit.jsx";
+import EditContact, { action as editAction } from "./routes/edit.jsx";
 
 const router = createBrowserRouter([
     {
@@ -37,7 +37,8 @@ const router = createBrowserRouter([
                 path: "contacts/:contactId/edit",
                 element: <EditContact />,
                 // in practice, each element should have its own loader.
-                loader: contactLoader
+                loader: contactLoader,
+                action: editAction
             }
         ]
     }
