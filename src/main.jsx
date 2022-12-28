@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
-    createBrowserRouter, createRoutesFromElements, Route,
+    createBrowserRouter,
     RouterProvider
 } from "react-router-dom";
 import './index.css'
@@ -12,36 +12,55 @@ import EditContact, { action as editAction } from "./routes/edit.jsx";
 import { action as destroyAction } from "./routes/destroy.jsx";
 import Index from "./routes/index.jsx";
 
-const router = createBrowserRouter(
-    createRoutesFromElements(
-        <Route
-            path={"/"}
-            element={<Root />}
-            loader={rootLoader}
-            action={rootAction}
-            errorElement={<ErrorPage />}
-        >
-            <Route errorElement={<ErrorPage />}>
-                <Route
-                    path={"contacts/:contactId"}
-                    element={<Contact />}
-                    loader={contactLoader}
-                    action={contactAction}
-                />
-                <Route
-                    path={"contacts/:contactId/edit"}
-                    element={<EditContact />}
-                    loader={contactLoader}
-                    action={editAction}
-                />
-                <Route
-                    path={"contacts/:contactId/destroy"}
-                    action={destroyAction}
-                />
-            </Route>
-        </Route>
-    )
-);
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <Root />,
+        // this will be the only element rendered on root page
+        errorElement: <ErrorPage />,
+        // this is the error page for anything on the ROOT page
+        // if an error is on otherpage/whatever, it will be handled instead by that error handler
+        loader: rootLoader,
+        // this is the loader for the root page, it will be run when navigated to
+        action: rootAction,
+        // this action will get caused when a POST request is made to the root page
+        children: [
+            {
+                errorElement: <ErrorPage/>,
+                children: [
+                    {
+                        // we use index and not {path: ""}
+                        // for an **exact** match case since the parent is a root
+                        index: true,
+                        element: <Index/>
+                    },
+                    {
+                        // since this is a child of /, it inherits the error handler
+                        path: 'contacts/:contactId',
+                        // IMPORTANT: don't use a leading slash here
+                        // this is a dynamic route, and contactId can be accessed in the component using
+                        // params.contactId inside the loader
+                        element: <Contact/>,
+                        // without an Outlet, this element will not be rendered anywhere
+                        loader: contactLoader,
+                        action: contactAction,
+                    },
+                    {
+                        path: "contacts/:contactId/edit",
+                        element: <EditContact/>,
+                        // in practice, each element should have its own loader.
+                        loader: contactLoader,
+                        action: editAction
+                    },
+                    {
+                        path: "contacts/:contactId/destroy",
+                        action: destroyAction
+                    }
+                ]
+            }
+        ]
+    }
+]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
