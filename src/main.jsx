@@ -26,32 +26,37 @@ const router = createBrowserRouter([
         // this action will get caused when a POST request is made to the root page
         children: [
             {
-                // we use index and not {path: ""}
-                // for an **exact** match case since the parent is a root
-                index: true,
-                element: <Index />
-            },
-            {
-                // since this is a child of /, it inherits the error handler
-                path: 'contacts/:contactId',
-                // IMPORTANT: don't use a leading slash here
-                // this is a dynamic route, and contactId can be accessed in the component using
-                // params.contactId inside the loader
-                element: <Contact />,
-                // without an Outlet, this element will not be rendered anywhere
-                loader: contactLoader,
-                action: contactAction,
-            },
-            {
-                path: "contacts/:contactId/edit",
-                element: <EditContact />,
-                // in practice, each element should have its own loader.
-                loader: contactLoader,
-                action: editAction
-            },
-            {
-                path: "contacts/:contactId/destroy",
-                action: destroyAction
+                errorElement: <ErrorPage/>,
+                children: [
+                    {
+                        // we use index and not {path: ""}
+                        // for an **exact** match case since the parent is a root
+                        index: true,
+                        element: <Index/>
+                    },
+                    {
+                        // since this is a child of /, it inherits the error handler
+                        path: 'contacts/:contactId',
+                        // IMPORTANT: don't use a leading slash here
+                        // this is a dynamic route, and contactId can be accessed in the component using
+                        // params.contactId inside the loader
+                        element: <Contact/>,
+                        // without an Outlet, this element will not be rendered anywhere
+                        loader: contactLoader,
+                        action: contactAction,
+                    },
+                    {
+                        path: "contacts/:contactId/edit",
+                        element: <EditContact/>,
+                        // in practice, each element should have its own loader.
+                        loader: contactLoader,
+                        action: editAction
+                    },
+                    {
+                        path: "contacts/:contactId/destroy",
+                        action: destroyAction
+                    }
+                ]
             }
         ]
     }
