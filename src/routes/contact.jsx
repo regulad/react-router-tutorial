@@ -1,4 +1,15 @@
-import { Form } from "react-router-dom";
+import {Form, useLoaderData} from "react-router-dom";
+import {getContact} from "../contacts.js";
+
+
+export async function loader({ params }) {
+    /**
+     * This method must be exported and named "loader" for use with the router.
+     */
+    const contact = await getContact(params.contactId);
+    return { contact };
+}
+
 
 function Favorite({ contact }) {
     let favorite = contact.favorite;
@@ -20,14 +31,9 @@ function Favorite({ contact }) {
 }
 
 export default function Contact() {
-    const contact = {
-        first: "Given Name",
-        last: "Family Name",
-        avatar: "https://placekitten.com/g/200/200", // can be undefined
-        twitter: "dinsaur1969",
-        notes: "This is a note about the contact.",
-        favorite: true,
-    }
+    const contact = useLoaderData();
+    // We must use this hook to access the data returned by the loader.
+    // This will also make it rerender when the url param and therefore the data changes.
 
     return (
         <div id={"contact"}>

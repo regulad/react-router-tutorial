@@ -7,7 +7,7 @@ import {
 import './index.css'
 import Root, { loader as rootLoader, action as rootAction } from "./routes/root.jsx";
 import ErrorPage from "./routes/error-page.jsx";
-import Contact from "./routes/contact.jsx";
+import Contact, { loader as contactLoader } from "./routes/contact.jsx";
 
 const router = createBrowserRouter([
     {
@@ -26,9 +26,11 @@ const router = createBrowserRouter([
                 // since this is a child of /, it inherits the error handler
                 path: 'contacts/:contactId',
                 // IMPORTANT: don't use a leading slash here
-                // this is a dynamic route, and contactId can be accessed in the component using TODO
-                element: <Contact />
+                // this is a dynamic route, and contactId can be accessed in the component using
+                // params.contactId inside the loader
+                element: <Contact />,
                 // without an Outlet, this element will not be rendered anywhere
+                loader: contactLoader
             }
         ]
     }
