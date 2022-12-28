@@ -82,7 +82,7 @@ export default function Contact() {
                     </Form>
                     <Form
                         method={"post"}
-                        action={"destroy"}
+                        action={"destroy"}  // this will post to /contacts/:contactId/destroy on submit
                         onSubmit={
                             (event) => {
                                 if (!confirm("Are you sure?")) {
