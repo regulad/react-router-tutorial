@@ -1,4 +1,4 @@
-import {Form, redirect, useLoaderData} from "react-router-dom";
+import {Form, redirect, useLoaderData, useNavigate} from "react-router-dom";
 import {updateContact} from "../contacts.js";
 
 export async function action({ request, params }) {
@@ -17,6 +17,7 @@ export async function action({ request, params }) {
 export default function EditContact() {
     const contact = useLoaderData();
     // since this uses the same loader as contact it will receive the same data
+    const navigate = useNavigate();
 
     return (
         <Form
@@ -73,7 +74,15 @@ export default function EditContact() {
 
             <p>
                 <button type={"submit"}>Save</button>
-                <button type={"button"}>Cancel</button>
+                <button
+                    type={"button"} // prevents default action
+                    onClick={() => {
+                        navigate(-1);
+                        // this method navigates back 1, instead of simply doing navigate("/") to go to the root
+                    }}
+                >
+                    Cancel
+                </button>
             </p>
         </Form>
     );
