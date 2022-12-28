@@ -24,6 +24,10 @@ function Favorite({ contact }) {
     // lets us run operations without page changing, even client side
     const fetcher = useFetcher();
     let favorite = contact.favorite;
+    if (fetcher.formData) {
+        // this is "optimistic" because it doesn't wait for the "backend" to repsond
+        favorite = fetcher.formData.get("favorite") === "true";
+    }
 
     return (
         <fetcher.Form method={"post"}>
