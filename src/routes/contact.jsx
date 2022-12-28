@@ -1,6 +1,13 @@
-import {Form, useLoaderData} from "react-router-dom";
-import {getContact} from "../contacts.js";
+import {Form, useFetcher, useLoaderData} from "react-router-dom";
+import {getContact, updateContact} from "../contacts.js";
 
+
+export async function action({ request, params }) {
+    let formData = await request.formData();
+    return updateContact(params.contactId, {
+        favorite: formData.get("favorite") === "true",
+    });
+}
 
 export async function loader({ params }) {
     /**
@@ -13,9 +20,13 @@ export async function loader({ params }) {
 
 
 function Favorite({ contact }) {
+    // fetcher, different from navigatior
+    // lets us run operations without page changing, even client side
+    const fetcher = useFetcher();
     let favorite = contact.favorite;
+
     return (
-        <Form method={"post"}>
+        <fetcher.Form method={"post"}>
             <button
                 name={"favorite"}
                 value={favorite ? "false" : "true"}
@@ -27,7 +38,7 @@ function Favorite({ contact }) {
             >
                 {favorite ? "★" : "☆"}
             </button>
-        </Form>
+        </fetcher.Form>
     );
 }
 

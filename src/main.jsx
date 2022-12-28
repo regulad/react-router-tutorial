@@ -7,7 +7,7 @@ import {
 import './index.css'
 import Root, { loader as rootLoader, action as rootAction } from "./routes/root.jsx";
 import ErrorPage from "./routes/error-page.jsx";
-import Contact, { loader as contactLoader } from "./routes/contact.jsx";
+import Contact, { loader as contactLoader, action as contactAction } from "./routes/contact.jsx";
 import EditContact, { action as editAction } from "./routes/edit.jsx";
 import { action as destroyAction } from "./routes/destroy.jsx";
 import Index from "./routes/index.jsx";
@@ -39,7 +39,8 @@ const router = createBrowserRouter([
                 // params.contactId inside the loader
                 element: <Contact />,
                 // without an Outlet, this element will not be rendered anywhere
-                loader: contactLoader
+                loader: contactLoader,
+                action: contactAction,
             },
             {
                 path: "contacts/:contactId/edit",
