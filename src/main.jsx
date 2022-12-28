@@ -8,6 +8,7 @@ import './index.css'
 import Root, { loader as rootLoader, action as rootAction } from "./routes/root.jsx";
 import ErrorPage from "./routes/error-page.jsx";
 import Contact, { loader as contactLoader } from "./routes/contact.jsx";
+import EditContact from "./routes/edit.jsx";
 
 const router = createBrowserRouter([
     {
@@ -30,6 +31,12 @@ const router = createBrowserRouter([
                 // params.contactId inside the loader
                 element: <Contact />,
                 // without an Outlet, this element will not be rendered anywhere
+                loader: contactLoader
+            },
+            {
+                path: "contacts/:contactId/edit",
+                element: <EditContact />,
+                // in practice, each element should have its own loader.
                 loader: contactLoader
             }
         ]
