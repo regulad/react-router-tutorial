@@ -1,4 +1,4 @@
-import {Form, Link, Outlet, redirect, useLoaderData} from "react-router-dom";
+import {Form, Link, NavLink, Outlet, redirect, useLoaderData} from "react-router-dom";
 import {createContact, getContacts} from "../contacts.js";
 
 export async function action() {
@@ -73,7 +73,16 @@ export default function Root() {
                                         (contact) => (
                                             /* the contact is the same type as before */
                                             <li key={contact.id}>
-                                                <Link to={`contacts/${contact.id}`}>
+                                                <NavLink
+                                                    to={`contacts/${contact.id}`}
+                                                    className={({ isActive, isPending }) =>
+                                                        isActive
+                                                            ? "active"
+                                                            : isPending
+                                                                ? "pending"
+                                                                : ""
+                                                    }
+                                                > {/* NavLinks can have special classNames */}
                                                     {/* Links are like any other element, so we can use them like this with children */}
                                                     {
                                                         contact.first || contact.last
@@ -82,7 +91,7 @@ export default function Root() {
                                                     }
                                                           {" " /* This space is a gap between title and the favorite star (not a button) */}
                                                           {contact.favorite && <span>★</span>}
-                                                      </Link>
+                                                      </NavLink>
                                                   </li>
                                               )
                                           )
